@@ -1,6 +1,5 @@
 import java.io.File;
 import java.io.IOException;
-import java.util.LinkedList;
 import java.util.Scanner;
 
 
@@ -24,11 +23,10 @@ public class InsertionSort {
     private static Node head;
 
     public static void main(String [] args) {
-        InsertionSort ui = new InsertionSort();
         File f = new File(args[0]);
         try {
             head = getNumbers(f);
-            ui.sort(head,0);
+            head = sort(head,0);
             print(head);
         } catch (IOException e) {
             e.printStackTrace();
@@ -47,7 +45,7 @@ public class InsertionSort {
         return head;
     }
 
-    private void sort(Node head,int sorted){
+    private static Node sort(Node head,int sorted){
         Node current = head;
         Node key = head;
         for(int i =0; i<=sorted; i++)
@@ -60,26 +58,27 @@ public class InsertionSort {
                 if (current == head && key.val > current.val) {
                     //if largest put at start
                     key.next = current;
-                    sort(key, ++sorted);
-                    break;
+                    head = sort(key, ++sorted);
+                    return head;
                 } else if (current.val < key.val && current.next.val > key.val) {
                     //insert between current and current.next
                     insert(current, key);
                     sort(head, ++sorted);
-                    break;
+                    return head;
                 } else if (current.next == null) {
                     //if smallest put at end
                     current.next = key;
                     sort(head, ++sorted);
-                    break;
+                    return head;
                 } else
                     current = current.next;
             }
 
         }
+        return head;
     }
 
-    private void remove(Node head, Node rm){
+    private static void remove(Node head, Node rm){
         Node current = head;
         while(true){
             if(current.next == rm){
@@ -91,28 +90,12 @@ public class InsertionSort {
         }
     }
 
-    private void insert(Node lead, Node inserted){
+    private static void insert(Node lead, Node inserted){
         Node tmp = lead;
         lead.next = inserted;
         inserted.next = tmp.next;
     }
 
-    private int getLength(Node head){
-        if(head == null)
-            return 0;
-        else{
-            Node current = head;
-            int count = 1;
-            while(current!=null) {
-                if (current.next == null) return count;
-                else {
-                    current = current.next;
-                    count++;
-                }
-            }
-        }
-        return 0;
-    }
 
     private static void print(Node head){
         Node current = head;

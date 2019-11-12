@@ -20,11 +20,14 @@ class Node {
 }
 
 public class InsertionSort {
+
+    private static Node head;
+
     public static void main(String [] args) {
         InsertionSort ui = new InsertionSort();
         File f = new File(args[0]);
         try {
-            Node head = getNumbers(f);
+            head = getNumbers(f);
             ui.sort(head,0);
             print(head);
         } catch (IOException e) {
@@ -51,21 +54,24 @@ public class InsertionSort {
             key=key.next;
 
 
-        while(key!=null){
+        if(key!=null){
             remove(head,key);
             for(int i =0; i<=sorted; ++i) {
                 if (current == head && key.val > current.val) {
                     //if largest put at start
                     key.next = current;
                     sort(key, ++sorted);
+                    break;
                 } else if (current.val < key.val && current.next.val > key.val) {
                     //insert between current and current.next
                     insert(current, key);
                     sort(head, ++sorted);
+                    break;
                 } else if (current.next == null) {
                     //if smallest put at end
                     current.next = key;
                     sort(head, ++sorted);
+                    break;
                 } else
                     current = current.next;
             }

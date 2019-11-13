@@ -54,24 +54,25 @@ public class InsertionSort {
 
         if(key!=null){
             remove(head,key);
-            for(int i =0; i<=sorted; ++i) {
+            key.next=null;
+            for(int i =0; i<=sorted; i++) {
                 if (current == head && key.val > current.val) {
                     //if largest put at start
                     key.next = current;
                     head = sort(key, ++sorted);
                     return head;
-                } else if (current.val < key.val && current.next.val > key.val) {
-                    //insert between current and current.next
-                    insert(current, key);
-                    sort(head, ++sorted);
+                }else if(current.val>=key.val && current.next.val<=key.val) {
+                    //if the number falls between 2 points insert it between them.
+                    insert(current,key);
+                    head = sort(head,++sorted);
                     return head;
-                } else if (current.next == null) {
-                    //if smallest put at end
-                    current.next = key;
-                    sort(head, ++sorted);
+                } else if(i==sorted){
+                    //if at the end of what has been sorted, put it back
+                    insert(current,key);
+                    head = sort(head, ++sorted);
                     return head;
-                } else
-                    current = current.next;
+                }else
+                    current=current.next;
             }
 
         }
@@ -91,9 +92,9 @@ public class InsertionSort {
     }
 
     private static void insert(Node lead, Node inserted){
-        Node tmp = lead;
+        Node tmp = lead.next;
         lead.next = inserted;
-        inserted.next = tmp.next;
+        inserted.next = tmp;
     }
 
 

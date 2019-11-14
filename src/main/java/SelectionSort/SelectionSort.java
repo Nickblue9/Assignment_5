@@ -39,18 +39,22 @@ public class SelectionSort {
         Node current = head;
 
         for(int j = 0; j<n; j++) {
-            high=Integer.MIN_VALUE;
+            high= Integer.MIN_VALUE;
             for(int i=0;i<j;++i)
                 current = current.next;
             while (current != null) {
-                if (current.val > high)
+                if (current.val >= high) {
                     high = current.val;
+                    current = current.next;
+                }
                 else
                     current = current.next;
             }
             current = head;
             for(int i=0;i<j;++i)current=current.next;
-            swap(current.val,high);
+            swap(current,high);
+            //print();
+            //System.out.println("\n---------------------------------------------------");
             current = head;
         }
 
@@ -58,39 +62,46 @@ public class SelectionSort {
     }
 
 
-    private static void swap(int x, int y){
+    private static void swap(Node x, int high)
+    {
+
+        // Nothing to do if x and y are same
+        if (x.val == high) return;
+
+        Node prevX = head;
+
+        if(x==head)
+            prevX = null;
+        else
+            while(prevX.next != x)
+                prevX=prevX.next;
+
+
+
+        // Search for y (keep track of prevY and currY)
+        Node prevY = null, y = x;
+        while (y.val != high)
         {
-
-            if (x == y) return;
-
-            Node prevX = null, currX = head;
-            while (currX != null && currX.val != x)
-            {
-                prevX = currX;
-                currX = currX.next;
-            }
-
-            Node prevY = null, currY = head;
-            while (currY != null && currY.val != y)
-            {
-                prevY = currY;
-                currY = currY.next;
-            }
-
-
-            if (currX == null || currY == null)
-                return;
-
-            if (prevX != null) prevX.next = currY;
-            else head = currY;
-
-            if (prevY != null) prevY.next = currX;
-            else head = currX;
-
-            Node temp = currX.next;
-            currX.next = currY.next;
-            currY.next = temp;
+            prevY = y;
+            y = y.next;
         }
+
+        // If x is not head of linked list
+        if (x == head)
+            head = y;
+        else //make y the new head
+            prevX.next = y;
+
+        // If y is not head of linked list
+        if (prevY != null)
+            prevY.next = x;
+        else // make x the new head
+            head = x;
+
+        // Swap next pointers
+        Node temp = x.next;
+        x.next = y.next;
+        y.next = temp;
     }
 
     private static int getLength(){

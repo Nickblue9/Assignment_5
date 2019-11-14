@@ -25,20 +25,23 @@ public class SelectionSort {
         File f = new File(args[0]);
         try {
             head = getNumbers(f);
-            head = sort(head);
-            print(head);
+            head = sort();
+            print();
         } catch (IOException e) {
             e.printStackTrace();
             System.exit(1);
         }
     }
 
-    private static Node sort(Node head){
-        int n = getLength(head);
-        int high = Integer.MIN_VALUE;
+    private static Node sort(){
+        int n = getLength();
+        int high;
         Node current = head;
 
         for(int j = 0; j<n; j++) {
+            high=Integer.MIN_VALUE;
+            for(int i=0;i<j;++i)
+                current = current.next;
             while (current != null) {
                 if (current.val > high)
                     high = current.val;
@@ -46,31 +49,51 @@ public class SelectionSort {
                     current = current.next;
             }
             current = head;
-            swap(head,j,high);
+            for(int i=0;i<j;++i)current=current.next;
+            swap(current.val,high);
+            current = head;
         }
 
         return head;
     }
 
-    private static void swap(Node head, int j, int high){
-        Node n1 = head;
-        for(int i = 0; i<j; i++)
-            n1 = n1.next;
 
-        Node n2 = head;
-        while(n2.val != high)
-            n2 = n2.next;
+    private static void swap(int x, int y){
+        {
 
-        swap(n1,n2);
+            if (x == y) return;
+
+            Node prevX = null, currX = head;
+            while (currX != null && currX.val != x)
+            {
+                prevX = currX;
+                currX = currX.next;
+            }
+
+            Node prevY = null, currY = head;
+            while (currY != null && currY.val != y)
+            {
+                prevY = currY;
+                currY = currY.next;
+            }
+
+
+            if (currX == null || currY == null)
+                return;
+
+            if (prevX != null) prevX.next = currY;
+            else head = currY;
+
+            if (prevY != null) prevY.next = currX;
+            else head = currX;
+
+            Node temp = currX.next;
+            currX.next = currY.next;
+            currY.next = temp;
+        }
     }
 
-    private static void swap(Node i, Node j){
-        Node tmp = i;
-        i = j;
-        j = tmp;
-    }
-
-    private static int getLength(Node head){
+    private static int getLength(){
         int count = 0;
         Node current = head;
         while(current!=null){
@@ -90,7 +113,7 @@ public class SelectionSort {
         return head;
     }
 
-    private static void print(Node head){
+    private static void print(){
         Node current = head;
         while(current.next!=null){
             System.out.print(current.val+" ");
